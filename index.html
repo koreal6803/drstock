@@ -219,7 +219,9 @@
     <footer class="py-5 bg-dark">
       <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Finlab 2017 </p>
-        <p class="m-0 text-center text-white"> 資料來源：台灣證券交易所 TWSE、中華民國證券櫃檯買賣中心 OTC、公開資訊觀測站 </p>
+        <p class="m-0 text-center text-white"> 資料來源：台灣證券交易所 TWSE、中華民國證券櫃檯買賣中心 OTC、公開資訊觀測站</p>
+        <p class="m-0 text-center text-white"> 此系統為電腦演算之過程，沒有一絲人為編撰，可視為股票指標的一種，並非直接的買賣建議，獲利與虧損請自行負責，使用者需自行斟酌 </p>
+
       </div>
       <!-- /.container -->
     </footer>
@@ -410,6 +412,7 @@
 
     if (c != null){
       $.getJSON( "/drstock/" + c + ".json", render_stock).fail(fail_stock)
+      $("#stock_id").val(c)
     }
     else {
       //$.getJSON( "http://0.0.0.0:8000/2330.json", render_stock)
