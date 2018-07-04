@@ -409,20 +409,20 @@
     }
 
     if (c != null){
-      $.getJSON( "/" + c + ".json", render_stock).fail(fail_stock)
+      $.getJSON( "/drstock/" + c + ".json", render_stock).fail(fail_stock)
     }
     else {
       //$.getJSON( "http://0.0.0.0:8000/2330.json", render_stock)
     }
 
     $("#search").click(function () {
-      $.getJSON( "/" + $("#stock_id").val() + ".json", render_stock).fail(fail_stock)
+      $.getJSON( "/drstock/" + $("#stock_id").val() + ".json", render_stock).fail(fail_stock)
     })
     $('#stock_id').unbind('keyup');
     $('#stock_id').keyup(function(e){
         if(e.keyCode == 13)
         {
-          $.getJSON( "/" + $("#stock_id").val() + ".json", render_stock).fail(fail_stock)
+          $.getJSON( "/drstock/" + $("#stock_id").val() + ".json", render_stock).fail(fail_stock)
         }
     });
 
