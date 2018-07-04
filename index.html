@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>FinLab - Dr. Stock 股市醫生</title>
+
+    <!-- Bootstrap core CSS -->
+    <!--<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link href="main.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/">Finlab - Dr. Stock（最新更新日期6/29，下次更新日期7/16）</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <!--<li class="nav-item">
+              <a class="nav-link" href="about.html">關於</a>
+            </li>-->
+            <li class="nav-item">
+              <a class="nav-link" href="https//www.finlab.tw" target="_blank">部落格</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://stockvirtual.info/query_user.php?mode=query_user&user_id=8981" target="_blank">實盤績效</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="mailto:finlabstaff@gmail.com">聯絡我們</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container" id="app">
+
+      <div class="jumbotron jumbotron-fluid" style="background: rgb(240,240,240);background-size: 100%">
+        <div class="container">
+          <h1 class="display-8">Dr. Stock（beta）：{{ overall_rank }}</h1>
+          <p class="lead">只需要看一眼，讓AI為您把脈！洞悉公司的優勢、劣勢</p>
+        </div>
+        <form class="form-inline">
+          <div class="form-group mx-sm-3 mb-2">
+            <input type="text" autocomplete="off" class="form-control" id="stock_id" placeholder="股票ID">
+            <input type="text" name="formsubmitfix" style="display: none;" />
+          </div>
+          <button type="button" class="btn btn-primary mb-2" id='search'>免費診斷</button>
+        </form>
+
+      </div>
+      
+
+      <!-- Features Section -->
+      <div class="row">
+        <div class="col-lg-6">
+          <h2>股票亮點</h2>
+          <p>此分數為綜合所有股票相對性的強弱，排名越前面代表Dr. Stock持正面評價</p>
+          <p>經由Dr. Stock可以得知，目前此檔股票的優勢在於</p>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ score1.split("：")[0] }}
+              <span class="badge badge-primary badge-pill">{{ score1.split("：")[1] }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ score2.split("：")[0] }}
+              <span class="badge badge-primary badge-pill">{{ score2.split("：")[1] }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ score3.split("：")[0] }}
+              <span class="badge badge-primary badge-pill">{{ score3.split("：")[1] }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-6">
+          <h2>股票警示</h2>
+          <p>此分數為綜合所有股票相對性的強弱，排名越後面代表Dr. Stock持負面評價</p>
+          <p>而其劣勢在於</p>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ score1_.split("：")[0] }}
+              <span class="badge badge-danger badge-pill">{{ score1_.split("：")[1] }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ score2_.split("：")[0] }}
+              <span class="badge badge-danger badge-pill">{{ score2_.split("：")[1] }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ score3_.split("：")[0] }}
+              <span class="badge badge-danger badge-pill">{{ score3_.split("：")[1] }}</span>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
+      <!-- /.row -->
+
+
+      <h2>持有（不持有）理由</h2>
+      <p>分數越高，代表Dr. Stock 比較有可能會因為該項因素持有該股，反之亦然，與其它股票比較此分數無意義</p>
+      <div class="row">
+        
+        <div id='score' style='width:100%;height:300px'></div>
+      </div>
+
+      <!--<h2>買入理由</h2>-->
+
+      <!-- Marketing Icons Section -->
+      <!--
+      <div class="row">
+        <div class="col-lg-4 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">{{ score1 }}</h4>
+            <div class="card-body" >
+              <div id='good1' style='height:200px'></div>
+            </div>
+            <div class="card-footer">
+              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">{{ score2 }}</h4>
+            <div class="card-body">
+              <div id='good2' style='height:200px'></div>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="btn btn-primary">Learn More</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">{{ score3 }}</h4>
+            <div class="card-body">
+              <div id='good3' style='height:200px'></div>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="btn btn-primary">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </div>-->
+      <!-- /.row -->
+
+      <!--<h2>賣出理由</h2>-->
+
+      <!-- Marketing Icons Section -->
+      <!--
+      <div class="row">
+        <div class="col-lg-4 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">{{ score1_ }}</h4>
+            <div class="card-body" >
+              <div id='bad1' style='height:200px'></div>
+            </div>
+            <div class="card-footer">
+              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">{{ score2_ }}</h4>
+            <div class="card-body">
+              <div id='bad2' style='height:200px'></div>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="btn btn-primary">Learn More</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="card h-100">
+            <h4 class="card-header">{{ score3_ }}</h4>
+            <div class="card-body">
+              <div id='bad3' style='height:200px'></div>
+            </div>
+            <div class="card-footer">
+              <a href="#" class="btn btn-primary">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </div>-->
+      <hr>
+
+      <!-- Call to Action Section -->
+      <div class="row mb-4">
+        <div class="col-md-8">
+          <p>FinLab提供技術轉移，歡迎企業與我們聯絡！</p>
+        </div>
+        <div class="col-md-4">
+          <a class="btn btn-lg btn-secondary btn-block" href="mailto:finlabstaff@gmail.com">來信詢問</a>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Finlab 2017 </p>
+        <p class="m-0 text-center text-white"> 資料來源：台灣證券交易所 TWSE、中華民國證券櫃檯買賣中心 OTC、公開資訊觀測站 </p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+  </body>
+  <script>
+
+    function toDataPoint(xname, yname, dict) {
+      ret = []
+      for (var n in dict) {
+        var np = {}
+        np[xname] = n;
+        np[yname] = dict[n]
+        ret.push(np)
+      }
+      return ret
+    }
+
+    function drawBarChart(id, points) {
+
+      var chart = new CanvasJS.Chart(id, {
+        animationEnabled: true,
+        //exportEnabled: true,
+        theme: "light2", // "light1", "light2", "dark1", "dark2"
+        //title:{
+        //  text: "Simple Column Chart with Index Labels"
+        //},
+        data: [{
+          type: "column", //change type to bar, line, area, pie, etc
+          //indexLabel: "{y}", //Shows y value on all Data Points
+          indexLabelFontColor: "#5A5757",
+          indexLabelPlacement: "outside",
+          dataPoints: points,
+        }]
+      });
+      chart.render();
+    }
+
+    function drawLineChart(id, graph) {
+
+      var lines = []
+
+      if (graph['graph'] === undefined) {
+        $('#' + id).html('<p>' + graph['value'] + '</p>')
+      }
+
+      for (var i in graph['graph']) {
+        line = {}
+        line['dataPoints'] = (toDataPoint('x', 'y',graph['graph'][i]['series']))
+
+        for (var j in line['dataPoints']) {
+          date = line['dataPoints'][j]['x']
+          line['dataPoints'][j]['x'] = new Date(parseInt(date)/1000000)
+        }
+
+        line['name'] = graph['graph'][i]['name']
+        line['showinLegend'] = true
+        line['visible'] = true
+        line['type'] = "spline"
+        line['xValueFormatString'] = "DD MMM, YYYY"
+        lines.push(line)
+      }
+
+      var chart = new CanvasJS.Chart(id, {
+        theme:"light2",
+        animationEnabled: true,
+        /*title:{
+          text: "Game of Thrones Viewers of the First Airing on HBO"
+        },*/
+        axisY :{
+          includeZero: false,
+          //title: "得分數",
+          //suffix: "mn"
+        },
+        toolTip: {
+          shared: "false"
+        },
+        /*legend:{
+          cursor:"pointer",
+          itemclick : toggleDataSeries
+        },*/
+        data: lines,
+      });
+      chart.render();
+    }
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        score1: '',
+        score2: '',
+        score3: '',
+        score1_: '',
+        score2_: '',
+        score3_: '',
+        ranking: '',
+        overall_rank: '我是智能診骨AI，請給我股票代號',
+      }
+    })
+
+    function textScore(p) {
+      return p['label'] + '：排名' + Math.round(100 - p['y']*100) + '％'
+    }
+
+    var url_string = window.location.href//"http://www.example.com/t.html?a=1&b=3&c=m2-m3-m4-m5"; //
+    var url = new URL(url_string);
+    var c = url.searchParams.get("stock_id");
+    console.log(c);
+
+   function render_stock( data ) {
+      console.log(data)
+      
+      var scores = toDataPoint('label', 'y', data['score'])
+
+      drawBarChart('score', scores.reverse())
+      ranks = toDataPoint('label', 'y', data['ranks']).reverse()
+
+      last = ranks.length
+
+      list_good = ['太牛啦', '666', '感覺樂觀', '看似不賴', '還不錯']
+      list_middle = ['好壞參半', '看不懂', '應該持平', '你說了算', '恩～直銅板好了']
+      list_bad = ['稍稍不妥', '有點危險', '面有難色', '不算太OK', '臉有點綠']
+
+      console.log(data['overall_rank'])
+      if (data['overall_rank'] > 0.6) {
+        app.overall_rank = list_good[Math.floor(Math.random()*4)] + '！'
+      } else if (data['overall_rank'] > 0.4){
+        app.overall_rank = list_middle[Math.floor(Math.random()*4)] + '，'
+      } else {
+        app.overall_rank = list_bad[Math.floor(Math.random()*4)] + '，只'
+      }
+      app.overall_rank += '勝過:' + Math.round(data['overall_rank']*100).toString() + '%的股票'
+      
+
+      app.score1 = textScore(ranks[0])
+      app.score2 = textScore(ranks[1])
+      app.score3 = textScore(ranks[2])
+
+      app.score1_ = textScore(ranks[last-1])
+      app.score2_ = textScore(ranks[last-2])
+      app.score3_ = textScore(ranks[last-3])
+
+      /*app.ranking = 
+      var item1 = scores[0]['label']
+      var graph1 = data['graphs'][item1]
+      drawLineChart('good1', graph1)
+
+      var item2 = scores[1]['label']
+      var graph2 = data['graphs'][item2]
+      drawLineChart('good2', graph2)
+
+      var item3 = scores[2]['label']
+      var graph3 = data['graphs'][item3]
+      drawLineChart('good3', graph3)
+
+      var item1_ = scores[last-1]['label']
+      var graph1_ = data['graphs'][item1_]
+      drawLineChart('bad1', graph1_)
+
+      var item2_ = scores[last-2]['label']
+      var graph2_ = data['graphs'][item2_]
+      drawLineChart('bad2', graph2_)
+
+      var item3_ = scores[last-3]['label']
+      console.log('-------',item3_)
+      var graph3_ = data['graphs'][item3_]
+      drawLineChart('bad3', graph3_)*/
+    };
+
+    function fail_stock() {
+      app.overall_rank = '找不到此股票喔！'
+
+      app.score1 = ''
+      app.score2 = ''
+      app.score3 = ''
+
+      app.score1_ = ''
+      app.score2_ = ''
+      app.score3_ = ''
+    }
+
+    if (c != null){
+      $.getJSON( "http://0.0.0.0:8000/" + c + ".json", render_stock).fail(fail_stock)
+    }
+    else {
+      //$.getJSON( "http://0.0.0.0:8000/2330.json", render_stock)
+    }
+
+    $("#search").click(function () {
+      $.getJSON( "http://0.0.0.0:8000/" + $("#stock_id").val() + ".json", render_stock).fail(fail_stock)
+    })
+    $('#stock_id').unbind('keyup');
+    $('#stock_id').keyup(function(e){
+        if(e.keyCode == 13)
+        {
+          $.getJSON( "/" + $("#stock_id").val() + ".json", render_stock).fail(fail_stock)
+        }
+    });
+
+
+  </script>
+
+</html>
